@@ -1,0 +1,77 @@
+.login-content {
+  --background: #121212;
+}
+
+.login-header {
+  background: #121212;
+  text-align: center;
+  padding: 40px 20px 20px 20px;
+  color: white;
+}
+
+.logo {
+  width: 150px;
+  height: auto;
+}
+
+.login-card {
+  background: #fff;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  padding: 35px 25px;
+  margin-top: -21px;
+  min-height: 80vh;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  position: relative; 
+}
+
+.login-card::before {
+  content: '';
+  position: absolute;
+  top: -4px;  
+  left: 55px; 
+  width: 0;
+  height: 0;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-top: 20px solid black; 
+}
+
+
+.login-card h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 25px;
+  color: #2e7d32;
+}
+
+.custom-item {
+  margin-bottom: 20px;
+}
+
+.actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px; 
+}
+
+.send-otp {
+  color: #2e7d32;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 10px 16px;
+  border-radius: 20px;
+  background: #fff;
+  text-align: left;
+  flex: 1;
+}
+
+ion-button {
+  --border-radius: 25px;
+  --background: #2e7d32;
+  flex: 1; 
+}
+
