@@ -159,14 +159,19 @@
   </ion-grid>
   
 <!-- Angular template for Happiness Graph display -->
-<ion-item>
-  <ion-progress-bar [value]="25 ">
-  <span style="font-size: 32px;">
-    {{ getHappinessFace() }}
-  </span>
-  </ion-progress-bar>
+<ion-item lines="none">
+  <div class="progress-container">
+    <ion-progress-bar [value]="progressValue"></ion-progress-bar>
+    <span class="bar-emoji" [style.left.%]="progressValue * 100">
+      {{ getHappinessFace() }}
+    </span>
+  </div>
 </ion-item>
 
+<!-- Demo buttons -->
+<ion-button (click)="updateProgress(0.25, ['red'])">Set Angry</ion-button>
+<ion-button (click)="updateProgress(0.5, ['amber'])">Set Happy</ion-button>
+<ion-button (click)="updateProgress(1, ['green','green','green'])">Set Great</ion-button>
 
 </ion-content>
 <ion-footer [translucent]="true">

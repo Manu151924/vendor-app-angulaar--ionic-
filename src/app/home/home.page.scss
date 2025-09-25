@@ -191,3 +191,47 @@ ngx-charts-bar-horizontal {
   font-weight: 600;
   font-size: 12px;
 }
+.progress-container {
+  position: relative;
+  width: 90%;
+  max-width: 600px;
+  margin: 20px auto;
+}
+
+ion-progress-bar {
+  height: 36px;
+  border-radius: 18px;
+  overflow: hidden;
+  --background: transparent;
+
+  &::part(track) {
+    background: transparent !important;
+  }
+
+  &::part(progress) {
+    height: 100%;
+    border-radius: 18px;
+    background: linear-gradient(
+      to right,
+      #ff2222,
+      #ff9900,
+      #c0c000,
+      #31ff60
+    ) !important;
+    transition: width 0.4s ease-in-out;
+  }
+}
+
+.bar-emoji {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 32px;
+  pointer-events: none;
+  user-select: none;
+  transition: left 0.4s ease-in-out;
+}
+
+
+
+

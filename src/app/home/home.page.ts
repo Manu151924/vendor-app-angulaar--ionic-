@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { IonHeader, IonToolbar, IonTitle, IonContent, IonFooter, IonTabButton, IonTabBar, IonIcon, IonBadge, IonButton, IonSegmentButton, IonSegment, IonCardContent, IonChip, IonGrid, IonRow, IonCol, IonCard, IonCardHeader, IonList, IonItem, IonLabel, IonProgressBar } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { CommonModule } from '@angular/common';
@@ -19,45 +19,45 @@ import { BrowserModule } from '@angular/platform-browser';
   imports: [IonProgressBar, IonLabel, IonItem, IonList, IonCardHeader,NgxChartsModule, IonCard, IonCol, IonRow, IonGrid, IonChip, IonCardContent, IonSegment, IonSegmentButton, IonButton, IonBadge, IonIcon, IonTabBar, IonTabButton, IonHeader, IonToolbar, IonContent, IonFooter, CommonModule,FormsModule],
 })
 export class HomePage implements OnInit {
-  constructor() {
+  constructor(private el: ElementRef, private renderer: Renderer2) {
     addIcons({ checkmarkDone, home, personOutline, notifications, locationOutline });
   Object.assign(this, { single });
+   this.updateProgress(0, [])
   }
   tab = 'delivery';
-    heatMaps: string[] = ['red', 'amber', 'green'];
 
  segment: string = 'delivery';
   notificationsCount = 5;
   selectedBranch = 'DELHI-11';
-   getHappinessFace(): string {
-    if (this.heatMaps.includes('red')) {
-      return '😠';  
-    } else if (this.heatMaps.includes('amber')) {
-      return '🙂'; 
-    } else if (this.heatMaps.every(color => color === 'green')) {
-      return '😃';  
-    }
-    return '😐';  
-  }
+  
+progressValue: number = 0.75;
+heatMaps: string[] = [];
 
-  //   {
-  //     name: 'DWARKA',
-  //     waybillCount: 10,
-  //     packageCount: 50,
-  //     totalWeight: 1.2,
-  //     lyingTimeHours: 20, // less than 24 => Green route
-  //     isActive: true,
-  //   },
-  //   {
-  //     name: 'KAROLBAGH',
-  //     waybillCount: 12,
-  //     packageCount: 60,
-  //     totalWeight: 2.5,
-  //     lyingTimeHours: 30, // more than 24 => Amber route
-  //     isActive: true,
-  //   },
-  //   // Additional routes...
-  // ];
+
+getHappinessFace(): string {
+  if (this.heatMaps.some(c => c === 'red')) {
+    return '😠'; // Angry
+  }
+  if (this.heatMaps.some(c => c === 'amber')) {
+    return '🙂'; // Happy
+  }
+  if (this.heatMaps.length > 0 && this.heatMaps.every(c => c === 'green')) {
+    return '😃'; // Great
+  }
+  return '😐'; // Default
+}
+
+updateProgress(newValue: number, newHeatMaps: string[]) {
+  this.progressValue = Math.min(1, Math.max(0, newValue)); // clamp 0–1
+  this.heatMaps = [...newHeatMaps]; // ✅ force reassign so Angular sees change
+
+  console.log(`Progress: ${Math.round(this.progressValue * 100)}%`);
+  console.log(`HeatMaps: ${this.heatMaps.join(', ')}`);
+  console.log(`Selected Face: ${this.getHappinessFace()}`);
+}
+
+
+
 
   hoveredRoute: any = null;
 
