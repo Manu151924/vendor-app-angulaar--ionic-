@@ -1,0 +1,128 @@
+ion-card {
+  margin: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+  ion-card-header {
+    background-color: #28a745;
+    color: white;
+    padding: 10px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+
+    ion-card-title {
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    ion-card-subtitle {
+      font-size: 14px;
+      cursor: pointer;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  ion-card-content {
+    padding: 15px;
+  }
+}
+
+ion-progress-bar {
+  height: 8px;
+  margin: 5px 0;
+
+  &.danger {
+    --background: #ff0000;
+    --progress-background: #ff0000;
+  }
+
+  &.warning {
+    --background: #ffcc00;
+    --progress-background: #ffcc00;
+  }
+
+  &.success {
+    --background: #28a745;
+    --progress-background: #28a745;
+  }
+}
+
+.header-row {
+  font-weight: bold;
+  background-color: #f0f0f0;
+}
+
+.clickable-row {
+  cursor: pointer;
+  &:hover {
+    background-color: #e0e0e0;
+  }
+
+  .warning {
+    color: #ffcc00;
+  }
+}
+
+.sfx-modal, .zero-pickup-modal, .not-manifested-modal, .draft-waybills-modal, .sh-ex-modal {
+  --width: 90%;
+  --height: 60%;
+  --border-radius: 8px;
+
+  ion-content {
+    --background: white;
+  }
+
+  ion-list {
+    padding: 10px;
+
+    ion-item {
+      --background: #f0f0f0;
+      margin: 5px 0;
+      border-radius: 4px;
+
+      ion-label {
+        h2 {
+          font-size: 14px;
+          font-weight: bold;
+          color: #28a745;
+        }
+        p {
+          font-size: 12px;
+          color: #333;
+        }
+      }
+
+      ion-button {
+        --padding-start: 5px;
+        --padding-end: 5px;
+      }
+    }
+  }
+}
+
+ion-tab-bar {
+  background-color: #28a745;
+  color: white;
+
+  ion-tab-button {
+    --color: white;
+    --color-selected: white;
+  }
+}
+
+@media (min-width: 768px) {
+  ion-card {
+    max-width: 400px;
+    margin: 15px auto;
+  }
+
+  ion-grid {
+    padding: 20px;
+  }
+
+  .sfx-modal, .zero-pickup-modal, .not-manifested-modal, .draft-waybills-modal, .sh-ex-modal {
+    --width: 50%;
+  }
+}

@@ -14,4 +14,12 @@ export const routes: Routes = [
     redirectTo: 'login',
     pathMatch: 'full',
   },
+  {
+    path: 'delivery',
+    loadComponent: () => import('./delivery/delivery.page').then( m => m.DeliveryPage)
+  },
+  {
+    path: 'booking',
+    loadComponent: () => import('./booking/booking.page').then( m => m.BookingPage)
+  },
 ];

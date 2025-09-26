@@ -32,7 +32,7 @@
     "@capacitor/ios": "7.4.3",
     "@capacitor/keyboard": "7.0.3",
     "@capacitor/status-bar": "7.0.3",
-    "@ionic/angular": "^8.0.0",
+    "@ionic/angular": "^8.7.5",
     "@swimlane/ngx-charts": "^23.0.1",
     "chart.js": "^4.5.0",
     "d3": "^7.9.0",

@@ -1,0 +1,289 @@
+<ion-content>
+  <div class="inventory-box">
+<ion-card class="inventory-card">
+  <div class="card-header">
+    <ion-chip color="success" class="branch-chip">
+      <ion-icon name="location" class="location"></ion-icon>
+      {{ selectedBranch }}
+    </ion-chip>
+
+    <div class="waybill-box">
+      <span class="waybill-line">WAYBILLS: {{ totalWaybills }}</span>
+      <span class="waybill-line">PKGS: {{ totalPackages }}</span>
+      <span class="waybill-line">WT. (Ton): {{ totalWeight }}</span>
+    </div>
+  </div>
+
+  <div class="card-content">
+    <div class="inventory-title">AVL. INVENTORY</div>
+
+    <div class="chart-container">
+      <div class="y-axis-label">DLV. ROUTE WISE WB COUNT</div>
+      <ngx-charts-bar-horizontal
+            [results]="chartData"
+            [scheme]="colorScheme"
+            [animations]="true"
+            [gradient]="false"
+            [roundEdges]="true"
+            [xAxis]="false"
+            [yAxis]="false"
+            [showDataLabel]="true"
+            [dataLabelFormatting]="labelWithName"
+            [barPadding]="10"
+            [tooltipDisabled]="true"
+            [barPadding]="5"
+            [view]="[300, 230]">
+      </ngx-charts-bar-horizontal>
+    </div>
+  </div>
+
+  <div class="card-footer">
+    {{ selectedBranch }}
+  </div>
+</ion-card>
+
+
+    
+    <div class="route-list">
+      <ion-chip *ngFor="let route of routes"
+                [color]="getRouteColor(route)"
+                (click)="openRouteDetails(route)"
+                (mouseenter)="hoverRoute(route)"
+                (mouseleave)="clearHover()"
+                [title]="getRouteTooltip(route)">
+        {{ route.name }}
+      </ion-chip>
+    </div>
+  </div>
+  
+
+  <!-- Hovered Route Inventory Details -->
+   @if(hoveredRoute){
+  <div  class="hover-details">
+    <div>Waybill Count: {{ hoveredRoute.waybillCount }}</div>
+    <div>Package Count: {{ hoveredRoute.packageCount }}</div>
+    <div>Total Weight: {{ hoveredRoute.totalWeight }} Tons</div>
+  </div>
+  }
+
+  <!-- Trip Status Section -->
+<ion-grid>
+  <!-- Overall Delivery Summary -->
+   <!-- <div class=" waybill-box">
+    <ion-col size="12">
+      <ion-card>
+        <ion-card-header>
+          <div class="amount-wrapper">
+            <img src="assets/icon/delivery-summary.png" alt="Delivery Summary" class="summary-icon" />
+            Overall Delivery Summary
+          </div>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-grid>
+            <ion-row>
+              <ion-col size="4"><strong>Total Packages</strong></ion-col>
+              <ion-col size="4"><strong>OFD</strong></ion-col>
+              <ion-col size="4"><strong>Delivered</strong></ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col size="4">400</ion-col>
+              <ion-col size="4">330</ion-col>
+              <ion-col size="4">170</ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col size="4"><strong>Un-Delivered</strong></ion-col>
+              <ion-col size="4"><strong>Weight</strong></ion-col>
+              <ion-col size="4"></ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col size="4">120</ion-col>
+              <ion-col size="4">3 tons</ion-col>
+              <ion-col size="4"></ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
+  </div> -->
+
+  <!-- Trip Status -->
+  <ion-row>
+    <ion-col size="6">
+      <ion-card>
+        <ion-card-header>
+          <div class="amount-wrapper">
+            <img src="assets/icon/trip-details.png" alt="Trip Status" class="tri-icon" />
+            Trip Status (Today)
+          </div>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-grid>
+            <ion-row>
+              <ion-col size="4"><strong>VEH No</strong></ion-col>
+              <ion-col size="4"><strong>OFD Count</strong></ion-col>
+              <ion-col size="4"><strong>Last Updated</strong></ion-col>
+            </ion-row>
+            <ion-row *ngFor="let trip of sortedTripStatus">
+              <ion-col size="4">{{ trip.vehicleNo }}</ion-col>
+              <ion-col size="4">{{ trip.ofdCount }}/{{ trip.totalWaybills }}</ion-col>
+              <ion-col size="4">{{ trip.lastUpdate | date:'shortTime' }}</ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
+
+    <!-- Absent Vehicles -->
+    <ion-col size="6">
+      <ion-card>
+        <ion-card-header>
+          <img src="assets/icon/absent.png" alt="Absent Vehicles" class="pod-icon" />
+          Absent Vehicle ({{ absentVehicles.length }})
+        </ion-card-header>
+        <ion-card-content>
+          <ion-grid>
+            <ion-row>
+              <ion-col size="12"><strong>Vehicle No</strong></ion-col>
+            </ion-row>
+            <ion-row *ngFor="let vehicle of absentVehicles">
+              <ion-col size="12">{{ vehicle.vehicleNo }} - Last Trip: {{ vehicle.lastTripDate | date:'shortDate' }}</ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
+  </ion-row>
+</ion-grid>
+
+
+  <!-- Summary Tiles -->
+  <ion-grid >
+    <ion-row>
+      <ion-col size="6">
+        <ion-card (click)="openToBeCollected()">
+  <div class="summary-tile">
+    <div class="amount-wrapper">
+      <img src="assets/icon/Rupee.png" alt="Rupee" class="rupee-icon" />
+      <h2>{{ toBeCollectedAmount }}</h2>
+    </div>
+    <p>To Be Collected</p>
+  </div>
+</ion-card>
+
+      </ion-col>
+
+      <ion-col size="6">
+        <ion-card (click)="openPendingPOD()">
+          <div class="summary-tile">
+            <div class="amount-wrapper">
+              <img src="assets/icon/POD.png" alt="POD" class="pod-icon" />
+            <h2>{{ pendingPODCount }}</h2>
+            </div>
+            <p>Pending POD's</p>
+          </div>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+<ion-row>
+      <ion-col size="6">
+        <ion-card (click)="openMarketVehicleUsage()">
+          <div class="summary-tile">
+            <div class="amount-wrapper">
+              <img src="assets/icon/MBVU.png" alt="POD" class="pod-icon" />
+            <h2>{{ marketVehicleUsage }}</h2>
+            </div>
+            <p>Market Vehicle Usage</p>
+          </div>
+        </ion-card>
+      </ion-col>
+
+      <ion-col size="6">
+        <ion-card>
+          <div class="summary-tile">
+            <div class="amount-wrapper">
+           <img src="assets/icon/SDU.png" alt="POD" class="pod-icon" />
+            <h2>{{ safedropUsage }}%</h2>   
+            </div>
+            <p>Safedrop Usage</p>
+          </div>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>  
+  <div>
+    <ion-card>
+      <ion-card-header style="font-weight: 600;">
+        Month Wise Snapshot
+      </ion-card-header>
+      <ion-card-content>     
+          <ion-row>
+            <ion-col size="3">
+              <ngx-charts-pie-chart 
+                [view]="viewForPie" 
+                [results]="pieChartData" 
+                [scheme]="colorSchemeForPie"
+                 [doughnut]="true">
+              </ngx-charts-pie-chart>
+            </ion-col>    
+            <ion-col size="8">
+              <div>
+                <label class="label">Vehicle Attendance</label>
+                <div class="bar-container">
+                  <div class="bar" [ngStyle]="{'background': getGradient(vehicleAttendancePercent)}">
+                    <span class="percentage">
+                      {{ vehicleAttendancePercent }}%
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label class="label">Safedrop Usage</label>
+                <div class="bar-container">
+                  <div class="bar" [ngStyle]="{'background': getGradient(safeDropPercent)}">
+                    <span class="percentage">
+                      {{ safeDropPercent }}%
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Market Vehicle Usage -->
+              <div>
+                <label class="label">Market Vehicle Usage</label>
+                <div class="bar-container">
+                  <div class="bar" [ngStyle]="{'background': getGradient(marketVehiclePercent)}">
+                    <span class="percentage">
+                      {{ marketVehiclePercent }}%
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </ion-col>
+          </ion-row>
+      </ion-card-content>
+    </ion-card>
+  </div>
+  <div class="progress-wrapper"
+      (mousedown)="startDrag($event)"
+      (mousemove)="onDrag($event)"
+      (mouseup)="endDrag()"
+      (mouseleave)="endDrag()">
+
+    <div class="progress-bar">
+      <div
+        class="progress-fill"
+        [style.width.%]="progressValue * 100"
+      ></div>
+    </div>
+    <div
+      class="progress-emoji"
+      [style.left.%]="progressValue * 100"
+    >
+      {{ getHappinessFace() }}
+    </div>
+    <div class="progress-text">
+      {{ (progressValue * 100) | number: '1.0-0' }}%
+    </div>
+  </div>
+</ion-content>
