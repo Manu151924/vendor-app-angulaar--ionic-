@@ -16,11 +16,6 @@ import { ShExModalComponent } from '../sh-ex-modal/sh-ex-modal.component';
   imports: [
     IonicModule,
     CommonModule,
-    SfxModalComponent ,
-    ZeroPickupModalComponent,
-    NotManifestedModalComponent,
-    DraftWaybillsModalComponent,
-    ShExModalComponent
   ],
 })
 export class BookingPage {
