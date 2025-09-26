@@ -65,47 +65,19 @@
     <div>Total Weight: {{ hoveredRoute.totalWeight }} Tons</div>
   </div>
   }
-
+ <ion-item lines="none" class="delivery-status">
+  <ion-label>
+    <ion-text color="primary">OFD: 330</ion-text> | 
+    <ion-text>DELIVERED: 170 / PKG 400 / WT. 3 Ton</ion-text> | 
+    <ion-text color="warning">UN-DELIVERED: 120</ion-text>
+  </ion-label>
+  <ion-select interface="popover" value="today" slot="end">
+    <ion-select-option value="today">Today</ion-select-option>
+  </ion-select>
+</ion-item>
   <!-- Trip Status Section -->
 <ion-grid>
-  <!-- Overall Delivery Summary -->
-   <!-- <div class=" waybill-box">
-    <ion-col size="12">
-      <ion-card>
-        <ion-card-header>
-          <div class="amount-wrapper">
-            <img src="assets/icon/delivery-summary.png" alt="Delivery Summary" class="summary-icon" />
-            Overall Delivery Summary
-          </div>
-        </ion-card-header>
-        <ion-card-content>
-          <ion-grid>
-            <ion-row>
-              <ion-col size="4"><strong>Total Packages</strong></ion-col>
-              <ion-col size="4"><strong>OFD</strong></ion-col>
-              <ion-col size="4"><strong>Delivered</strong></ion-col>
-            </ion-row>
-            <ion-row>
-              <ion-col size="4">400</ion-col>
-              <ion-col size="4">330</ion-col>
-              <ion-col size="4">170</ion-col>
-            </ion-row>
-            <ion-row>
-              <ion-col size="4"><strong>Un-Delivered</strong></ion-col>
-              <ion-col size="4"><strong>Weight</strong></ion-col>
-              <ion-col size="4"></ion-col>
-            </ion-row>
-            <ion-row>
-              <ion-col size="4">120</ion-col>
-              <ion-col size="4">3 tons</ion-col>
-              <ion-col size="4"></ion-col>
-            </ion-row>
-          </ion-grid>
-        </ion-card-content>
-      </ion-card>
-    </ion-col>
-  </div> -->
-
+ 
   <!-- Trip Status -->
   <ion-row>
     <ion-col size="6">

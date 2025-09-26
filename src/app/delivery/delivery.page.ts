@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
-import {  IonContent,  IonIcon,  IonCardContent, IonChip, IonGrid, IonRow, IonCol, IonCard, IonCardHeader, IonList, IonItem, IonLabel } from '@ionic/angular/standalone';
+import {  IonContent,  IonIcon,  IonCardContent, IonChip,IonSelect,IonSelectOption ,IonGrid, IonRow, IonCol, IonCard, IonCardHeader,IonText, IonList, IonItem, IonLabel } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { CommonModule } from '@angular/common';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
@@ -16,7 +16,7 @@ import { Color, ScaleType } from '@swimlane/ngx-charts';
   templateUrl: './delivery.page.html',
   styleUrls: ['./delivery.page.scss'],
   standalone: true,
-  imports: [ IonCardHeader,NgxChartsModule, IonCard, IonCol, IonRow, IonGrid, IonChip, IonCardContent, IonIcon, IonContent, CommonModule,FormsModule],
+  imports: [ IonCardHeader,NgxChartsModule, IonCard, IonCol, IonRow, IonGrid, IonChip, IonCardContent,IonSelect,IonSelectOption , IonIcon,IonText, IonContent,IonList, IonItem, IonLabel, CommonModule,FormsModule],
 })
 export class DeliveryPage implements OnInit {
 constructor() {

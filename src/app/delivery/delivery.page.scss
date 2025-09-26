@@ -265,3 +265,20 @@ ion-item.yet-to-unload {
 .ofd-status.amber { color: #ff8000; }
 .danger { color: #f84a4a; }
 .special-asterisk { color: #20c596; margin-left: 2px; }
+.delivery-status {
+  --background: #e0e0e0;
+  --padding-start: 10px;
+  --padding-end: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 50px;
+
+  ion-text {
+    margin: 0 5px;
+  }
+
+  ion-select {
+    max-width: 100px;
+  }
+}

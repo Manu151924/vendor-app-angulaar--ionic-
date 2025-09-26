@@ -1,16 +1,26 @@
 import { Component, inject } from '@angular/core';
 import { ModalController, IonicModule } from '@ionic/angular';
-import { CommonModule } from '@angular/common'; // Added for *ngFor and other directives
+import { CommonModule } from '@angular/common'; // Required for *ngFor, *ngIf
 import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
+import { SfxModalComponent } from '../sfx-modal/sfx-modal.component';
+import { ZeroPickupModalComponent } from '../zero-pickup-modal/zero-pickup-modal.component';
+import { NotManifestedModalComponent } from '../not-maintained-modal/not-maintained-modal.component';
+import { DraftWaybillsModalComponent } from '../draft-waybill-modal/draft-waybill-modal.component';
+import { ShExModalComponent } from '../sh-ex-modal/sh-ex-modal.component';
 
 @Component({
   selector: 'app-booking',
-  templateUrl: 'booking.page.html',
-  styleUrls: ['booking.page.scss'],
+  templateUrl: './booking.page.html',
+  styleUrls: ['./booking.page.scss'],
   standalone: true,
   imports: [
     IonicModule,
-    CommonModule, // Ensure CommonModule is imported for structural directives
+    CommonModule,
+    SfxModalComponent ,
+    ZeroPickupModalComponent,
+    NotManifestedModalComponent,
+    DraftWaybillsModalComponent,
+    ShExModalComponent
   ],
 })
 export class BookingPage {
@@ -46,10 +56,15 @@ export class BookingPage {
 
   private modalController = inject(ModalController);
 
+  constructor() {
+    console.log('BookingPage initialized'); // Debug log
+  }
+
   async openSfxModal() {
+    console.log('Opening SFX Modal');
     this.assignedSfxData = this.getAssignedSfxData();
     const modal = await this.modalController.create({
-      component: null,
+      component: SfxModalComponent,
       componentProps: { assignedSfxData: this.assignedSfxData },
       cssClass: 'sfx-modal'
     });
@@ -58,9 +73,10 @@ export class BookingPage {
   }
 
   async openZeroPickupModal() {
+    console.log('Opening ZERO PICKUP Modal');
     this.zeroPickupData = this.getZeroPickupData();
     const modal = await this.modalController.create({
-      component: null,
+      component: ZeroPickupModalComponent,
       componentProps: { zeroPickupData: this.zeroPickupData },
       cssClass: 'zero-pickup-modal'
     });
@@ -69,9 +85,10 @@ export class BookingPage {
   }
 
   async openNotManifestedModal() {
+    console.log('Opening NOT MANIFESTED Modal');
     this.notManifestedData = this.getNotManifestedData();
     const modal = await this.modalController.create({
-      component: null,
+      component: NotManifestedModalComponent,
       componentProps: { notManifestedData: this.notManifestedData },
       cssClass: 'not-manifested-modal'
     });
@@ -80,9 +97,10 @@ export class BookingPage {
   }
 
   async openDraftWaybillsModal() {
+    console.log('Opening DRAFT WAYBILLS Modal');
     this.draftWaybillsData = this.getDraftWaybillsData();
     const modal = await this.modalController.create({
-      component: null,
+      component: DraftWaybillsModalComponent,
       componentProps: { draftWaybillsData: this.draftWaybillsData },
       cssClass: 'draft-waybills-modal'
     });
@@ -91,10 +109,11 @@ export class BookingPage {
   }
 
   async openShExModal(vehicleNo: string) {
+    console.log('Opening SH/EX Modal for', vehicleNo);
     this.selectedVehicle = vehicleNo;
     this.shExDetails = this.getShExDetails(vehicleNo);
     const modal = await this.modalController.create({
-      component: null,
+      component: ShExModalComponent,
       componentProps: { shExDetails: this.shExDetails, selectedVehicle: this.selectedVehicle },
       cssClass: 'sh-ex-modal'
     });
