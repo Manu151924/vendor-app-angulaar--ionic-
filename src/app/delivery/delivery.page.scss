@@ -266,19 +266,36 @@ ion-item.yet-to-unload {
 .danger { color: #f84a4a; }
 .special-asterisk { color: #20c596; margin-left: 2px; }
 .delivery-status {
-  --background: #e0e0e0;
+  padding: 10px;
+  background: #f5f6f5;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+ion-card {
+  box-shadow: none;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+ion-item {
   --padding-start: 10px;
-  --padding-end: 10px;
+  --inner-padding-end: 10px;
+}
+
+ion-list {
+  padding: 0;
+}
+
+ion-icon {
+  margin-right: 10px;
+}
+
+.table-container {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  height: 50px;
+}
 
-  ion-text {
-    margin: 0 5px;
-  }
-
-  ion-select {
-    max-width: 100px;
-  }
+.table-left, .table-right {
+  width: 48%;
 }

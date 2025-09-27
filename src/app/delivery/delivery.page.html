@@ -1,5 +1,4 @@
-<ion-content>
-  <div class="inventory-box">
+<ion-content>  <div class="inventory-box">
 <ion-card class="inventory-card">
   <div class="card-header">
     <ion-chip color="success" class="branch-chip">
@@ -41,19 +40,6 @@
     {{ selectedBranch }}
   </div>
 </ion-card>
-
-
-    
-    <div class="route-list">
-      <ion-chip *ngFor="let route of routes"
-                [color]="getRouteColor(route)"
-                (click)="openRouteDetails(route)"
-                (mouseenter)="hoverRoute(route)"
-                (mouseleave)="clearHover()"
-                [title]="getRouteTooltip(route)">
-        {{ route.name }}
-      </ion-chip>
-    </div>
   </div>
   
 
@@ -76,57 +62,85 @@
   </ion-select>
 </ion-item>
   <!-- Trip Status Section -->
-<ion-grid>
- 
-  <!-- Trip Status -->
-  <ion-row>
-    <ion-col size="6">
-      <ion-card>
-        <ion-card-header>
-          <div class="amount-wrapper">
-            <img src="assets/icon/trip-details.png" alt="Trip Status" class="tri-icon" />
-            Trip Status (Today)
-          </div>
-        </ion-card-header>
-        <ion-card-content>
-          <ion-grid>
-            <ion-row>
-              <ion-col size="4"><strong>VEH No</strong></ion-col>
-              <ion-col size="4"><strong>OFD Count</strong></ion-col>
-              <ion-col size="4"><strong>Last Updated</strong></ion-col>
-            </ion-row>
-            <ion-row *ngFor="let trip of sortedTripStatus">
-              <ion-col size="4">{{ trip.vehicleNo }}</ion-col>
-              <ion-col size="4">{{ trip.ofdCount }}/{{ trip.totalWaybills }}</ion-col>
-              <ion-col size="4">{{ trip.lastUpdate | date:'shortTime' }}</ion-col>
-            </ion-row>
-          </ion-grid>
-        </ion-card-content>
-      </ion-card>
-    </ion-col>
 
-    <!-- Absent Vehicles -->
-    <ion-col size="6">
-      <ion-card>
-        <ion-card-header>
-          <img src="assets/icon/absent.png" alt="Absent Vehicles" class="pod-icon" />
-          Absent Vehicle ({{ absentVehicles.length }})
-        </ion-card-header>
-        <ion-card-content>
-          <ion-grid>
-            <ion-row>
-              <ion-col size="12"><strong>Vehicle No</strong></ion-col>
-            </ion-row>
-            <ion-row *ngFor="let vehicle of absentVehicles">
-              <ion-col size="12">{{ vehicle.vehicleNo }} - Last Trip: {{ vehicle.lastTripDate | date:'shortDate' }}</ion-col>
-            </ion-row>
-          </ion-grid>
-        </ion-card-content>
-      </ion-card>
-    </ion-col>
-  </ion-row>
-</ion-grid>
 
+<ion-card>
+  <ion-card-header>
+    <ion-card-title>Trip Status</ion-card-title>
+  </ion-card-header>
+  
+  <ion-card-content>
+    <div class="table-container">
+      <!-- First Table (Trip Status) -->
+      <div class="table-left">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>VEH No.</th>
+              <th>MF vs ULD (WB)</th>
+              <th>MF vs ULD (Pcs.)</th>
+              <th>SH/EX</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>5555</td>
+              <td>16/17</td>
+              <td>300/296</td>
+              <td>4</td>
+            </tr>
+            <tr>
+              <td>4321</td>
+              <td>17/17</td>
+              <td>222/200</td>
+              <td>-</td>
+            </tr>
+            <tr>
+              <td>7733</td>
+              <td>22/22</td>
+              <td>122/130</td>
+              <td>1</td>
+            </tr>
+            <tr>
+              <td>1287</td>
+              <td>30/24</td>
+              <td>90/80</td>
+              <td>6</td>
+            </tr>
+            <tr>
+              <td>8873</td>
+              <td>20/20</td>
+              <td>108/108</td>
+              <td>0</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Second Table (Absent Vehicles) -->
+      <div class="table-right">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>VEH No.</th>
+              <th>Last Pickup Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1654</td>
+              <td>18-Aug-2024</td>
+            </tr>
+            <tr>
+              <td>1218</td>
+              <td>17-Aug-2024</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </ion-card-content>
+</ion-card>
 
   <!-- Summary Tiles -->
   <ion-grid >

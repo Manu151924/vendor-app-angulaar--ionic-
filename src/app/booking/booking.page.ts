@@ -1,32 +1,36 @@
-import { Component, inject } from '@angular/core';
-import { ModalController, IonicModule } from '@ionic/angular';
+import { Component, ViewChild, ElementRef, inject } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 import { CommonModule } from '@angular/common'; // Required for *ngFor, *ngIf
-import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
+import { Color, ScaleType } from '@swimlane/ngx-charts';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+
 import { SfxModalComponent } from '../sfx-modal/sfx-modal.component';
 import { ZeroPickupModalComponent } from '../zero-pickup-modal/zero-pickup-modal.component';
 import { NotManifestedModalComponent } from '../not-maintained-modal/not-maintained-modal.component';
 import { DraftWaybillsModalComponent } from '../draft-waybill-modal/draft-waybill-modal.component';
 import { ShExModalComponent } from '../sh-ex-modal/sh-ex-modal.component';
+import { IonContent, IonCard, IonIcon, IonChip, IonCardTitle, IonCardSubtitle, IonItem, IonLabel, IonGrid, IonRow, IonCol, IonCardHeader, IonCardContent, IonModal, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonList, IonTabBar, IonTabButton } from "@ionic/angular/standalone";
 
 @Component({
   selector: 'app-booking',
   templateUrl: './booking.page.html',
   styleUrls: ['./booking.page.scss'],
   standalone: true,
-  imports: [
-    IonicModule,
+  imports: [IonTabButton, IonTabBar, IonList, IonButton, IonButtons, IonTitle, IonToolbar, IonHeader, IonModal, IonCardContent, IonCardHeader, IonCol, IonRow, IonGrid, IonLabel, IonItem, IonCardSubtitle, IonCardTitle, IonChip, IonIcon, IonCard, IonContent, 
     CommonModule,
+    NgxChartsModule,
+    SfxModalComponent,
+    ZeroPickupModalComponent,
+    NotManifestedModalComponent,
+    DraftWaybillsModalComponent,
+    ShExModalComponent
   ],
 })
 export class BookingPage {
+  // Pie Chart Data
   public pieChartLabels: string[] = ['Edited', 'Booked'];
-  public pieChartData: ChartData<'pie', number[], string | string[]> = {
-    datasets: [{
-      data: [30, 70],
-      backgroundColor: ['#ff9800', '#26a69a']
-    }]
-  };
-  public pieChartType: ChartType = 'pie';
+  public pieChartData: { name: string, value: number }[] = [];
+  public pieChartType: string = 'pie'; // Using string for ngx-charts
   public selectedVehicle = '';
   public shExDetails: any[] = [];
   public assignedSfxData: any[] = [];
@@ -43,6 +47,13 @@ export class BookingPage {
     { vehicleNo: '8873', manifestedWaybills: 20, unloadedWaybills: 20, manifestedPackages: 108, unloadedPackages: 108, shortExcess: 0 }
   ];
 
+  colorSchemeForPie: Color = {
+    name: 'customScheme',
+    selectable: true,
+    group: ScaleType.Ordinal,
+    domain: ['#40c057', '#fa5252'] // Green for Delivered, Red for Undelivered
+  };
+
   // Sample absent vehicles data
   public absentVehicles = [
     { vehicleNo: '1654' },
@@ -51,8 +62,52 @@ export class BookingPage {
 
   private modalController = inject(ModalController);
 
+  // ViewChild references for modals (if using template modals)
+  @ViewChild('zeroPickupModal') zeroPickupModal!: IonModal;
+  @ViewChild('notManifestedModal') notManifestedModal!: IonModal;
+  @ViewChild('draftWaybillsModal') draftWaybillsModal!: IonModal;
+
   constructor() {
-    console.log('BookingPage initialized'); // Debug log
+    console.log('BookingPage initialized');
+    this.updatePieChart(); // Initialize pie chart data
+  }
+
+  dataLabelFormatting(c: any) {
+    return c.value;
+  }
+
+  async openModal(name: string, event?: Event) {
+    event?.stopPropagation();
+    let modalComponent: any;
+    switch (name) {
+      case 'ZERO PICKUP SFX':
+        modalComponent = ZeroPickupModalComponent;
+        this.zeroPickupData = this.getZeroPickupData();
+        break;
+      case 'NOT MANIFESTED':
+        modalComponent = NotManifestedModalComponent;
+        this.notManifestedData = this.getNotManifestedData();
+        break;
+      case 'DRAFT WAYBILLS':
+        modalComponent = DraftWaybillsModalComponent;
+        this.draftWaybillsData = this.getDraftWaybillsData();
+        break;
+    }
+    if (modalComponent) {
+      let dataProp: any[] = [];
+      if (name === 'ZERO PICKUP SFX') {
+        dataProp = this.zeroPickupData;
+      } else if (name === 'NOT MANIFESTED') {
+        dataProp = this.notManifestedData;
+      } else if (name === 'DRAFT WAYBILLS') {
+        dataProp = this.draftWaybillsData;
+      }
+      const modal = await this.modalController.create({
+        component: modalComponent,
+        componentProps: { data: dataProp },
+      });
+      await modal.present();
+    }
   }
 
   async openSfxModal() {
@@ -70,6 +125,7 @@ export class BookingPage {
   async openZeroPickupModal() {
     console.log('Opening ZERO PICKUP Modal');
     this.zeroPickupData = this.getZeroPickupData();
+    console.log('Zero Pickup Data:', this.zeroPickupData);
     const modal = await this.modalController.create({
       component: ZeroPickupModalComponent,
       componentProps: { zeroPickupData: this.zeroPickupData },
@@ -184,4 +240,53 @@ export class BookingPage {
       return 'success';
     }
   }
+
+  viewForPie: [number, number] = [150, 200];
+  selectedBranch = 'DELHI-11';
+
+  updatePieChart() {
+    const total = this.totalDelivered + this.totalUndelivered;
+    this.pieChartData = [
+      { name: 'Delivered', value: this.totalDelivered },
+      { name: 'Undelivered', value: this.totalUndelivered }
+    ];
+  }
+
+  totalDelivered = 370;
+  totalUndelivered = 20;
+  vehicleAttendancePercent = 33;
+  safeDropPercent = 66;
+  marketVehiclePercent = 80;
+
+  getGradient(percentage: number): string {
+    let redWidth = 0;
+    let orangeWidth = 0;
+    let greenWidth = 0;
+
+    if (percentage <= 33) {
+      redWidth = percentage;
+    } else if (percentage <= 66) {
+      redWidth = 33;
+      orangeWidth = percentage - 33;
+    } else {
+      redWidth = 33;
+      orangeWidth = 33;
+      greenWidth = percentage - 66;
+    }
+
+    return `linear-gradient(to right, red ${redWidth}%, orange ${redWidth + orangeWidth}%, green ${redWidth + orangeWidth + greenWidth}%)`;
+  }
+
+  chartData = [
+    { name: 'ZERO PICKUP SFX', value: 4 },
+    { name: 'NOT MANIFESTED', value: 120 },
+    { name: 'DRAFT WAYBILLS', value: 79 },
+  ];
+
+  colorScheme: Color = {
+    name: 'customScheme',
+    selectable: true,
+    group: ScaleType.Ordinal,
+    domain: ['#C62828', '#F9A825', '#43A047', '#81C784', '#66BB6A']
+  };
 }

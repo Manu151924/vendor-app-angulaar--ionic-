@@ -1,40 +1,43 @@
 
 <ion-content>
+  <div class="inventory-box">
+      <ion-card class="inventory-card">
+        <div class="card-header">
+            <ion-chip color="success" class="branch-chip">
+              <ion-icon name="location" class="location"></ion-icon>
+              {{ selectedBranch }}
+            </ion-chip>
+            <div class="waybill-box">
+              <ion-card-title>Assigned SFX</ion-card-title>
+              <ion-card-subtitle (click)="openSfxModal()">20</ion-card-subtitle>
+            </div>
+        </div>
+     <div class="card-content">
+    <div class="chart-container">
+      <div *ngFor="let item of chartData" class="chart-item" (click)="openModal(item.name)">
+        <ngx-charts-bar-horizontal
+          [results]="[item]"
+          [scheme]="colorScheme"
+          [animations]="false"
+          [gradient]="false"
+          [roundEdges]="true"
+          [xAxis]="false"
+          [yAxis]="false"
+          [showDataLabel]="true"
+          [dataLabelFormatting]="dataLabelFormatting"
+          [barPadding]="10"
+          [tooltipDisabled]="true"
+          [view]="[300, 50]"> <!-- Adjusted height for single bar -->
+        </ngx-charts-bar-horizontal>
+        <span class="label">{{ item.name }}</span>
+        <span class="value" (click)="openModal(item.name, $event)">{{ item.value }}</span>
+      </div>
+    </div>
+  </div>
+      </ion-card>
+  </div>
 
-  <ion-select value="DELHI-11" interface="popover">
-    <ion-select-option value="DELHI-11">DELHI-11</ion-select-option>
-  </ion-select>
 
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Assigned SFX</ion-card-title>
-      <ion-card-subtitle (click)="openSfxModal()">20</ion-card-subtitle>
-    </ion-card-header>
-  </ion-card>
-
-  <ion-card color="danger">
-    <ion-card-header>
-      <ion-card-title>ZERO PICKUP SFX</ion-card-title>
-      <ion-card-subtitle (click)="openZeroPickupModal()">4</ion-card-subtitle>
-    </ion-card-header>
-    <ion-progress-bar value="0.2" color="danger"></ion-progress-bar>
-  </ion-card>
-
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>NOT MANIFESTED</ion-card-title>
-      <ion-card-subtitle (click)="openNotManifestedModal()">120</ion-card-subtitle>
-    </ion-card-header>
-    <ion-progress-bar value="0.6"></ion-progress-bar>
-  </ion-card>
-
-  <ion-card color="warning">
-    <ion-card-header>
-      <ion-card-title>DRAFT WAYBILLS</ion-card-title>
-      <ion-card-subtitle (click)="openDraftWaybillsModal()">79</ion-card-subtitle>
-    </ion-card-header>
-    <ion-progress-bar value="0.4" color="warning"></ion-progress-bar>
-  </ion-card>
 
   <ion-item>
     <ion-label>Today</ion-label>
