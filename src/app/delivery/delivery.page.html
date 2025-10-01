@@ -1,163 +1,148 @@
-<ion-content>  <div class="inventory-box">
-<ion-card class="inventory-card">
-  <div class="card-header">
-    <ion-chip color="success" class="branch-chip">
-      <ion-icon name="location" class="location"></ion-icon>
-      {{ selectedBranch }}
-    </ion-chip>
-
-    <div class="waybill-box">
-      <span class="waybill-line">WAYBILLS: {{ totalWaybills }}</span>
-      <span class="waybill-line">PKGS: {{ totalPackages }}</span>
-      <span class="waybill-line">WT. (Ton): {{ totalWeight }}</span>
-    </div>
+<ion-content>
+  <div class="inventory-box">
+    <ion-card class="inventory-card">
+<div class="card-header">
+  <ion-item lines="none" class="custom-dropdown">
+    <ion-icon name="location" slot="start" class="location"></ion-icon>
+    <ion-select [(ngModel)]="selectedBranch" interface="popover" class="branch-select">
+      <ion-select-option *ngFor="let branch of branches" [value]="branch">
+        {{ branch }}
+      </ion-select-option>
+    </ion-select>
+  </ion-item>
+  <div class="waybill-box">
+    <span class="waybill-line">WAYBILLS: {{ totalWaybills }}</span>
+    <span class="waybill-line">PKGS: {{ totalPackages }}</span>
+    <span class="waybill-line">WT. (Ton): {{ totalWeight }}</span>
   </div>
+</div>
 
-  <div class="card-content">
-    <div class="inventory-title">AVL. INVENTORY</div>
+
+      <div class="card-content">
+        <div class="inventory-title">AVL. INVENTORY</div>
 
     <div class="chart-container">
       <div class="y-axis-label">DLV. ROUTE WISE WB COUNT</div>
-      <ngx-charts-bar-horizontal
-            [results]="chartData"
-            [scheme]="colorScheme"
-            [animations]="true"
-            [gradient]="false"
-            [roundEdges]="true"
-            [xAxis]="false"
-            [yAxis]="false"
-            [showDataLabel]="true"
-            [dataLabelFormatting]="labelWithName"
-            [barPadding]="10"
-            [tooltipDisabled]="true"
-            [barPadding]="5"
-            [view]="[300, 230]">
-      </ngx-charts-bar-horizontal>
+      <canvas #routeChart></canvas>
+      <div class="card-footer">DELHI-11</div>
     </div>
-  </div>
 
-  <div class="card-footer">
-    {{ selectedBranch }}
-  </div>
-</ion-card>
+      </div>
+    </ion-card>
   </div>
   
 
-  <!-- Hovered Route Inventory Details -->
-   @if(hoveredRoute){
-  <div  class="hover-details">
-    <div>Waybill Count: {{ hoveredRoute.waybillCount }}</div>
-    <div>Package Count: {{ hoveredRoute.packageCount }}</div>
-    <div>Total Weight: {{ hoveredRoute.totalWeight }} Tons</div>
-  </div>
-  }
- <ion-item lines="none" class="delivery-status">
+<ion-item lines="none" class="delivery-box">
   <ion-label>
-    <ion-text color="primary">OFD: 330</ion-text> | 
-    <ion-text>DELIVERED: 170 / PKG 400 / WT. 3 Ton</ion-text> | 
-    <ion-text color="warning">UN-DELIVERED: 120</ion-text>
-  </ion-label>
-  <ion-select interface="popover" value="today" slot="end">
-    <ion-select-option value="today">Today</ion-select-option>
-  </ion-select>
+    <ion-text class="delivery-line">OFD: 330</ion-text> | 
+    <ion-text class="delivery-line">DELIVERED: 170 / PKG 400 / WT. 3 Ton</ion-text> | 
+    <ion-text class="delivery-line">UN-DELIVERED: 120</ion-text>
+  </ion-label> 
+  <ion-button class="day-wise-button" id="openDateModal">
+    {{ displayDate }}
+  </ion-button>
 </ion-item>
-  <!-- Trip Status Section -->
+ 
+<ion-modal trigger="openDateModal" [keepContentsMounted]="false">
+  <ng-template>
+    <ion-content>
+      <ion-datetime
+        [(ngModel)]="tempDate"
+        presentation="date"
+        [max]="maxDate"
+        [min]="minDate">
+      </ion-datetime>
 
-
-<ion-card>
-  <ion-card-header>
-    <ion-card-title>Trip Status</ion-card-title>
-  </ion-card-header>
-  
-  <ion-card-content>
-    <div class="table-container">
-      <!-- First Table (Trip Status) -->
-      <div class="table-left">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>VEH No.</th>
-              <th>MF vs ULD (WB)</th>
-              <th>MF vs ULD (Pcs.)</th>
-              <th>SH/EX</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>5555</td>
-              <td>16/17</td>
-              <td>300/296</td>
-              <td>4</td>
-            </tr>
-            <tr>
-              <td>4321</td>
-              <td>17/17</td>
-              <td>222/200</td>
-              <td>-</td>
-            </tr>
-            <tr>
-              <td>7733</td>
-              <td>22/22</td>
-              <td>122/130</td>
-              <td>1</td>
-            </tr>
-            <tr>
-              <td>1287</td>
-              <td>30/24</td>
-              <td>90/80</td>
-              <td>6</td>
-            </tr>
-            <tr>
-              <td>8873</td>
-              <td>20/20</td>
-              <td>108/108</td>
-              <td>0</td>
-            </tr>
-          </tbody>
-        </table>
+      <ion-footer>
+        <ion-toolbar>
+          <ion-buttons slot="end">
+            <ion-button color="medium" (click)="dismissModal(false)">Cancel</ion-button>
+            <ion-button (click)="dismissModal(true)">OK</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-footer>
+    </ion-content>
+  </ng-template>
+</ion-modal>
+  <ion-card class="trip-status-card" (click)="toggleExpansion()">
+    <div class="trip-header-row">
+      <div class="trip-lhs">
+        <img src="assets/icon/tripd.png" alt="Trip Icon" class="custom-icon" />
+        <span class="trip-title">Trip Status</span>
+        <span class="trip-count txt-green">{{ tripCount }}</span>
       </div>
-
-      <!-- Second Table (Absent Vehicles) -->
-      <div class="table-right">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>VEH No.</th>
-              <th>Last Pickup Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>1654</td>
-              <td>18-Aug-2024</td>
-            </tr>
-            <tr>
-              <td>1218</td>
-              <td>17-Aug-2024</td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="trip-rhs">
+        <img src="assets/icon/absent.png" alt="Trip Icon" class="custom-icon-rhs" />
+        <span class="trip-title">Absent</span>
+        <span class="trip-count txt-red">{{ absentCount }}</span>
       </div>
     </div>
-  </ion-card-content>
-</ion-card>
+
+    <!-- Tables always visible -->
+    <div class="trip-table-row">
+      <!-- Trip vehicles -->
+      <div class="trip-table lhs">
+        <div class="table-header">
+          <span>VEH No.</span>
+          <span>OFD Status</span>
+          <span>Last Updated</span>
+        </div>
+        @for (v of displayedTripVehicles; track v.no) {
+          <div class="table-row">
+            <span [ngClass]="{'txt-green': v.ok, 'txt-red': !v.ok}">
+              {{ v.no }}
+              @if (v.star) {
+                <span class="txt-green">*</span>
+              }
+            </span>
+            <span>
+              <span [ngClass]="{'txt-green': v.ofdDone > 0, 'txt-red': v.ofdDone == 0}">
+                {{ v.ofdDone }}
+              </span>
+              /{{ v.ofdTotal }}
+            </span>
+            <span>
+              {{ v.lastUpdated }} <ion-icon name="location"></ion-icon>
+            </span>
+          </div>
+        }
+      </div>
+
+      <div class="trip-table rhs">
+        <div class="table-header">
+          <span>VEH No.</span>
+          <span>Last Trip Date</span>
+        </div>
+        @for (v of displayedAbsentVehicles; track v.no) {
+          <div class="table-row">
+            <span>{{ v.no }}</span>
+            <span>{{ v.lastTripDate }}</span>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="expand-indicator">
+      <ion-icon [name]="isExpanded ? 'chevron-up-outline' : 'chevron-down-outline'"
+        class="expand-check">
+      </ion-icon>
+    </div>
+  </ion-card>
 
   <!-- Summary Tiles -->
   <ion-grid >
     <ion-row>
       <ion-col size="6">
         <ion-card (click)="openToBeCollected()">
-  <div class="summary-tile">
-    <div class="amount-wrapper">
-      <img src="assets/icon/Rupee.png" alt="Rupee" class="rupee-icon" />
-      <h2>{{ toBeCollectedAmount }}</h2>
-    </div>
-    <p>To Be Collected</p>
-  </div>
-</ion-card>
-
+          <div class="summary-tile">
+            <div class="amount-wrapper">
+              <img src="assets/icon/Rupee.png" alt="Rupee" class="rupee-icon" />
+              <h2>{{ toBeCollectedAmount }}</h2>
+            </div>
+            <p>To Be Collected</p>
+          </div>
+        </ion-card>
       </ion-col>
-
       <ion-col size="6">
         <ion-card (click)="openPendingPOD()">
           <div class="summary-tile">
@@ -170,30 +155,30 @@
         </ion-card>
       </ion-col>
     </ion-row>
-<ion-row>
-      <ion-col size="6">
-        <ion-card (click)="openMarketVehicleUsage()">
-          <div class="summary-tile">
-            <div class="amount-wrapper">
-              <img src="assets/icon/MBVU.png" alt="POD" class="pod-icon" />
-            <h2>{{ marketVehicleUsage }}</h2>
-            </div>
-            <p>Market Vehicle Usage</p>
-          </div>
-        </ion-card>
-      </ion-col>
+    <ion-row>
+          <ion-col size="6">
+            <ion-card (click)="openMarketVehicleUsage()">
+              <div class="summary-tile">
+                <div class="amount-wrapper">
+                  <img src="assets/icon/MBVU.png" alt="POD" class="pod-icon" />
+                <h2>{{ marketVehicleUsage }}</h2>
+                </div>
+                <p>Market Vehicle Usage</p>
+              </div>
+            </ion-card>
+          </ion-col>
 
-      <ion-col size="6">
-        <ion-card>
-          <div class="summary-tile">
-            <div class="amount-wrapper">
-           <img src="assets/icon/SDU.png" alt="POD" class="pod-icon" />
-            <h2>{{ safedropUsage }}%</h2>   
-            </div>
-            <p>Safedrop Usage</p>
-          </div>
-        </ion-card>
-      </ion-col>
+          <ion-col size="6">
+            <ion-card>
+              <div class="summary-tile">
+                <div class="amount-wrapper">
+              <img src="assets/icon/SDU.png" alt="POD" class="pod-icon" />
+                <h2>{{ safedropUsage }}%</h2>   
+                </div>
+                <p>Safedrop Usage</p>
+              </div>
+            </ion-card>
+          </ion-col>
     </ion-row>
   </ion-grid>  
   <div>
@@ -204,12 +189,19 @@
       <ion-card-content>     
           <ion-row>
             <ion-col size="3">
-              <ngx-charts-pie-chart 
-                [view]="viewForPie" 
-                [results]="pieChartData" 
-                [scheme]="colorSchemeForPie"
-                 [doughnut]="true">
-              </ngx-charts-pie-chart>
+          <ngx-charts-pie-chart
+            [results]="pieChartData"
+            [scheme]="colorSchemeForPie"
+            [doughnut]="true"
+            [arcWidth]="0.5"
+            [gradient]="false"
+            [labels]="false"
+            [legend]="false"
+            [explodeSlices]="false"
+            [animations]="true"
+            [tooltipDisabled]="true"
+            [view]="[180,180]">
+          </ngx-charts-pie-chart>
             </ion-col>    
             <ion-col size="8">
               <div>

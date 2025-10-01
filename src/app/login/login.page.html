@@ -10,7 +10,7 @@
     </ion-item>
      <ion-item lines="full" class="custom-item">
       <ion-label position="stacked">Enter Otp</ion-label>
-      <ion-input type="number" inputmode="numeric" maxlength="6"[(ngModel)]="otp" [disabled]="otpDisabled" ></ion-input>
+      <ion-input type="password" inputmode="otp" maxlength="6"[(ngModel)]="otp" [disabled]="otpDisabled" ></ion-input>
      </ion-item>
      <div class="actions">
       <a (click)="otpSend()" class="send-otp">Send OTP</a>

@@ -1,5 +1,5 @@
-import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
-import {  IonContent,  IonIcon,  IonCardContent, IonChip,IonSelect,IonSelectOption ,IonGrid, IonRow, IonCol, IonCard, IonCardHeader,IonText, IonList, IonItem, IonLabel, IonCardTitle } from '@ionic/angular/standalone';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {  IonContent,  IonIcon,  IonCardContent,IonSelect,IonSelectOption ,IonGrid, IonRow, IonCol, IonCard, IonCardHeader,IonText, IonItem, IonLabel, IonButton, IonFooter, IonToolbar, IonButtons, IonModal, IonDatetime } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { CommonModule } from '@angular/common';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
@@ -7,30 +7,140 @@ import { single } from '../data';
 
 
 import { FormsModule } from '@angular/forms';
-import { checkmarkDone, home, personOutline, notifications,location, carSport, } from 'ionicons/icons';
-import { Chart } from 'chart.js';
+import { checkmarkDone, home, personOutline, notifications,location, carSport, chevronUpOutline , chevronDownOutline } from 'ionicons/icons';
+import {
+  Chart,
+  ChartConfiguration,
+  ChartType,
+  registerables
+} from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+
+Chart.register(...registerables, ChartDataLabels);
 import { Color, ScaleType } from '@swimlane/ngx-charts';
+
 
 @Component({
   selector: 'app-delivery',
   templateUrl: './delivery.page.html',
   styleUrls: ['./delivery.page.scss'],
   standalone: true,
-  imports: [IonCardTitle,  IonCardHeader,NgxChartsModule, IonCard, IonCol, IonRow, IonGrid, IonChip, IonCardContent,IonSelect,IonSelectOption , IonIcon,IonText, IonContent, IonItem, IonLabel, CommonModule,FormsModule],
+  imports: [IonModal, IonButtons, IonToolbar, IonFooter, IonButton,  IonCardHeader,NgxChartsModule, IonCard, IonCol, IonRow, IonGrid, IonCardContent,IonSelect,IonSelectOption ,IonDatetime, IonIcon,IonText, IonContent, IonItem, IonLabel, CommonModule,FormsModule],
 })
-export class DeliveryPage implements OnInit {
+export class DeliveryPage implements OnInit, AfterViewInit  {
 constructor() {
-    addIcons({ checkmarkDone, home, personOutline, notifications, location,carSport });
+    addIcons({ checkmarkDone, home, personOutline, notifications, location,carSport,chevronUpOutline , chevronDownOutline });
   Object.assign(this, { single });
      this.progressValue = 0;
          this.updatePieChart();
 
   }
+    chart!: Chart;
+    @ViewChild('routeChart') routeChart!: ElementRef<HTMLCanvasElement>;
+
+  ngOnInit() {
+      
+    const today = new Date();
+
+    this.selectedDate = today.toISOString();
+    this.tempDate = this.selectedDate;
+
+    this.maxDate = today.toISOString();
+
+    const lastYear = new Date();
+    lastYear.setFullYear(today.getFullYear() - 1);
+    this.minDate = lastYear.toISOString();
+
+    this.loadData(this.selectedDate);
+  }
+    ngAfterViewInit(){
+    this.updatePieChart();
+  }
+
+  dismissModal(save: boolean) {
+    if (save && this.tempDate) {
+      const todayStr = new Date().toDateString();
+      const chosenStr = new Date(this.tempDate).toDateString();
+
+      if (todayStr === chosenStr) {
+        this.displayDate = 'Today';
+        this.selectedDate = new Date().toISOString();
+      } else {
+        this.displayDate = new Date(this.tempDate).toLocaleDateString('en-GB', {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric'
+        });
+        this.selectedDate = this.tempDate;
+      }
+
+      this.loadData(this.selectedDate);
+    } else {
+      // reset temp back to last saved
+      this.tempDate = this.selectedDate;
+    }
+
+    this.modal.dismiss();
+  }
+
+
+  loadData(date: string) {
+    console.log('Loading data for:', date);
+  }
+    branches = ['DELHI-11', 'DWARKA', 'KAROLBAGH', 'UTTAMNAGAR'];
+  createChart() {
+    const ctx = this.routeChart.nativeElement.getContext('2d');
+
+
+    this.chart = new Chart(ctx!, {
+      type: 'bar' as ChartType,
+      data: {
+        labels: this.chartData.map(d => d.name),
+        datasets: [{
+          data: this.chartData.map(d => d.value),
+          backgroundColor: ['#C62828', '#F9A825', '#43A047', '#81C784', '#66BB6A'],
+          borderRadius: 6,
+          barPercentage: 0.4
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        plugins: {
+          legend: { display: false },
+          tooltip: { enabled: false },
+          datalabels: {
+            color: '#000',
+            anchor: 'start',
+            align: 'start',
+            font: { weight: 'bold' },
+            formatter: (value, context) => {
+              const name = context.chart.data.labels?.[context.dataIndex];
+              return `${name}: ${value}`;
+            }
+          }
+        },
+        scales: {
+          x: { display: false },
+          y: { display: false }
+        }
+      }
+    } as ChartConfiguration);
+  }
+
 
    deliveredWB = 370;
   undeliveredWB = 20;
   notificationsCount = 5;
   selectedBranch = 'DELHI-11';
+  @ViewChild(IonModal) modal!: IonModal;
+
+  displayDate: string = 'Today'; 
+  selectedDate: string = '';      
+  tempDate: string = '';           
+
+  minDate!: string;
+  maxDate!: string;
+
   
 progressValue: number = 0; 
 isDragging: boolean = false;
@@ -76,24 +186,27 @@ vehicleAttendancePercent = 33;
   safeDropPercent = 66;          
   marketVehiclePercent = 80;      
 
-  getGradient(percentage: number): string {
-    let redWidth = 0;
-    let orangeWidth = 0;
-    let greenWidth = 0;
+getGradient(percentage: number): string {
+  let redWidth = 0;
+  let orangeWidth = 0;
+  let greenWidth = 0;
 
-    if (percentage <= 33) {
-      redWidth = percentage;  
-    } else if (percentage <= 66) {
-      redWidth = 33;         
-      orangeWidth = percentage - 33;  
-    } else {
-      redWidth = 33;          
-      orangeWidth = 33;       
-      greenWidth = percentage - 66; 
-    }
-
-    return `linear-gradient(to right, red ${redWidth}%, orange ${orangeWidth + redWidth}%, green ${greenWidth + orangeWidth + redWidth}%)`;
+  // Calculate red width
+  if (percentage <= 33) {
+    redWidth = percentage;
+  } else if (percentage <= 66) {
+    redWidth = 33;
+    orangeWidth = percentage - 33;
+  } else {
+    redWidth = 33;
+    orangeWidth = 33;
+    greenWidth = percentage - 66;
   }
+
+  // Return the linear gradient with calculated widths
+  return `linear-gradient(to right, red ${redWidth}%, orange ${orangeWidth + redWidth}%, green ${greenWidth + orangeWidth + redWidth}%)`;
+}
+
 
 
   // Function to get the color for the percentage number on the right side
@@ -159,18 +272,34 @@ tripStatusList = [
   totalWaybills = this.routes.reduce((sum, b) => sum + b.waybillCount, 0);
   totalWeight = Number(this.routes.reduce((sum, b) => sum + b.totalWeight, 0).toFixed(1));
   totalTon = Math.ceil(this.totalWeight / 1000);
+  tripCount = 7;
+  absentCount = 2;
 
-sortedTripStatus = [
-    { vehicleNo: '1234', ofdCount: 16, totalWaybills: 20, lastUpdate: new Date() },
-    { vehicleNo: '5678', ofdCount: 12, totalWaybills: 20, lastUpdate: new Date() },
-    // Add more trips
+  tripVehicles = [
+    { no: '1234', ofdDone: 16, ofdTotal: 20, lastUpdated: '12:00', star: false, ok: true, alert: false },
+    { no: '4321', ofdDone: 11, ofdTotal: 17, lastUpdated: '14:00', star: false, ok: true, alert: false },
+    { no: '7733', ofdDone: 12, ofdTotal: 22, lastUpdated: '10:00', star: true, ok: true, alert: false },
+    { no: '8973', ofdDone: 10, ofdTotal: 23, lastUpdated: '09:00', star: false, ok: true, alert: false },
+    { no: '1287', ofdDone: 0, ofdTotal: 24, lastUpdated: '05:00', star: false, ok: false, alert: true },
+    { no: '1286', ofdDone: 0, ofdTotal: 24, lastUpdated: '05:00', star: false, ok: false, alert: true }
   ];
 
   absentVehicles = [
-    { vehicleNo: '9876', lastTripDate: new Date('2025-09-20') },
-    { vehicleNo: '5432', lastTripDate: new Date('2025-09-21') },
-    // Add more absent vehicles
+    { no: "1654", lastTripDate: "18-Aug-2024" },
+    { no: "1218", lastTripDate: "17-Aug-2024" }
   ];
+  isExpanded = false;
+  get displayedTripVehicles() {
+    return this.isExpanded ? this.tripVehicles : this.tripVehicles.slice(0, 5);
+  }
+
+  get displayedAbsentVehicles() {
+    return this.isExpanded ? this.absentVehicles : this.absentVehicles.slice(0, 5);
+  }
+
+  toggleExpansion() {
+    this.isExpanded = !this.isExpanded;
+  }
 
   toBeCollectedAmount = 52348;
   pendingPODCount = 3;
@@ -196,9 +325,6 @@ sortedTripStatus = [
 
   chartInstance!: Chart;
 
-
-  ngOnInit() {
-  }
 
   getRouteColor(route: any) {
     if (!route.isActive) return 'medium';
@@ -250,7 +376,7 @@ sortedTripStatus = [
   chartData = [
     {
       name: 'DWARKA',
-      value: 50 // You can use your actual data here
+      value: 50 
     },
     {
       name: 'KAROLBAGH',
@@ -270,12 +396,12 @@ sortedTripStatus = [
     }
   ];
     totalPackages: number = 670;
-  labelWithName(data: any): string {
-    return data.dataname;
+  labelWithName(name: any): string {
+    return `${name}`;
   }
 
   // Chart options
-  view: [number, number] = [300, 230];
+  // view: [number, number] = [300, 230];
   gradient: boolean = false; 
   showLegend: boolean = true;
   showXAxis: boolean = true;
@@ -298,15 +424,16 @@ pieChartData: any[] = [];
   // Pie chart color scheme
     totalDelivered = 370;
   totalUndelivered = 20;
-  colorSchemeForPie: Color = {
+   colorSchemeForPie: Color = {
     name: 'customScheme',
     selectable: true,
     group: ScaleType.Ordinal, 
-    domain: ['#40c057', '#fa5252']  // Green for Delivered, Red for Undelivered
+    domain: ['#06B4A2', '#FF8A0D'] 
   };
 
+
   // Define chart size
-  viewForPie: [number, number] = [150, 200];
+  viewForPie: [number, number] = [350, 200];
    updatePieChart() {
     const total = this.totalDelivered + this.totalUndelivered;
     

@@ -1,4 +1,3 @@
-
 <ion-content>
   <div class="inventory-box">
       <ion-card class="inventory-card">
@@ -7,10 +6,12 @@
               <ion-icon name="location" class="location"></ion-icon>
               {{ selectedBranch }}
             </ion-chip>
-            <div class="waybill-box">
-              <ion-card-title>Assigned SFX</ion-card-title>
-              <ion-card-subtitle (click)="openSfxModal()">20</ion-card-subtitle>
-            </div>
+          <div class="waybill-box">
+          <p class="asx">
+            Assigned SFX 
+            <span class="sfx-number" (click)="openSfxModal()">20</span>
+          </p>    
+        </div>
         </div>
      <div class="card-content">
     <div class="chart-container">
@@ -36,15 +37,10 @@
   </div>
       </ion-card>
   </div>
-
-
-
   <ion-item>
     <ion-label>Today</ion-label>
     <ion-icon name="chevron-down"></ion-icon>
   </ion-item>
-
-  <!-- Trip Status Section -->
   <ion-grid>
     <ion-row>
       <ion-col size="6">
@@ -94,8 +90,6 @@
       </ion-col>
     </ion-row>
   </ion-grid>
-
-  <!-- Modal for Assigned SFX Details -->
   <ion-modal #sfxModal>
     <ng-template>
       <ion-header>
@@ -252,18 +246,3 @@
     </ng-template>
   </ion-modal>
 </ion-content>
-
-<ion-tab-bar slot="bottom">
-  <ion-tab-button tab="task">
-    <ion-icon name="checkbox"></ion-icon>
-    <ion-label>Task</ion-label>
-  </ion-tab-button>
-  <ion-tab-button tab="home">
-    <ion-icon name="home"></ion-icon>
-    <ion-label>Home</ion-label>
-  </ion-tab-button>
-  <ion-tab-button tab="account">
-    <ion-icon name="person"></ion-icon>
-    <ion-label>Account</ion-label>
-  </ion-tab-button>
-</ion-tab-bar>

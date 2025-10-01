@@ -16,7 +16,7 @@ import { IonContent, IonCard, IonIcon, IonChip, IonCardTitle, IonCardSubtitle, I
   templateUrl: './booking.page.html',
   styleUrls: ['./booking.page.scss'],
   standalone: true,
-  imports: [IonTabButton, IonTabBar, IonList, IonButton, IonButtons, IonTitle, IonToolbar, IonHeader, IonModal, IonCardContent, IonCardHeader, IonCol, IonRow, IonGrid, IonLabel, IonItem, IonCardSubtitle, IonCardTitle, IonChip, IonIcon, IonCard, IonContent, 
+  imports: [ IonList, IonButton, IonButtons, IonTitle, IonToolbar, IonHeader, IonModal, IonCardContent, IonCardHeader, IonCol, IonRow, IonGrid, IonLabel, IonItem, IonChip, IonIcon, IonCard, IonContent, 
     CommonModule,
     NgxChartsModule,
     SfxModalComponent,

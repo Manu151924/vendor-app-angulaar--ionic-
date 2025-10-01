@@ -27,41 +27,70 @@
 
 .inventory-card {
   padding: 16px;
-  border-radius: 12px;
+  border-radius: 16px;
   border: 20px solid #22b573;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  position: relative;
+  background: #fff;
+  overflow: visible;
 }
 
 .card-header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: row;
+  align-items: flex-start;
+  position: absolute;
+  top: -28px;
+  left: 18px;
+  width: calc(100% - 36px);
+  gap: 16px;
+  z-index: 10;
+  background: transparent;
 }
 
-.branch-chip {
-  font-weight: bold;
-  font-size: 14px;
+.custom-dropdown {
+    display: flex;
+    align-items: center;
+    background: #e8f7e6;
+    border: 3px solid #fff;
+    border-radius: 18px 12px 20px 12px;
+    font-size: 1.14em;
+    color: #22b25d;
+    font-weight: 200;
+    box-shadow: 0 0 0 2px white;
+    margin-left: -36px;
+    margin-top: 20px;
+    margin-right: -107px;
+}
+
+.branch-select {
+  font-weight: 700;
+  font-size: 1em;
+  background: transparent;
+  color: #22b25d;
 }
 
 .waybill-box {
-  background-color: #e0e0e0;
-  padding: 6px 10px;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  justify-content: flex-end;
+    background-color: #58595b;
+    color: #fff;
+    padding: 7px 7px;
+    border-radius: 7px;
+    font-size: 12px;
+    font-weight: 600;
+    display: flex
+;
+    align-items: center;
+    margin-top: 30px;
+    margin-left: 93px;
 }
 
 .waybill-line {
   white-space: nowrap;
+  color: #fff;
 }
 
-
 .card-content {
-  margin-top: 16px;
+  margin-top: 46px;
 }
 
 .inventory-title {
@@ -78,24 +107,22 @@
 }
 
 .y-axis-label {
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
-  text-align: center;
-  margin-right: -3px;
-  font-size: 12px;
-  font-weight: 500;
-  color: #4caf50;  
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    text-align: center;
+    margin-right: 5px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #4caf50;
 }
 
-ngx-charts-bar-horizontal {
-  flex: 1;
-}
 
 .card-footer {
-  text-align: center;
-  margin-top: 12px;
-  font-weight: bold;
-  color: #4caf50;
+    text-align: center;
+    margin-top: 171px;
+    font-weight: bold;
+    color: #4caf50;
+    margin-left: -188px;
 }
 
 .progress-wrapper {
@@ -161,48 +188,6 @@ ngx-charts-bar-horizontal {
   color: #fff;
 }
 
-
-
-.inventory-card {
-  position: relative;
-  border-radius: 14px;
-  background: #fff;
-  box-shadow: 0 2px 14px rgba(0,0,0,0.08);
-  overflow: visible; // allows chips to overlap
-  margin: 24px auto 0 auto;
-  padding: 0;
-}
-.card-header {
-  .branch-chip {
-    background: #22b573;
-    color: #fff;
-    border-radius: 13px 13px 13px 13px;
-    font-weight: 600;
-    font-size: 1rem;
-    min-width: 29vw;
-    height: 50px;
-    padding: 0 15px 0 13px;
-    display: flex
-;
-    align-items: center;
-    box-shadow: 0 3px 8px rgba(33, 177, 99, 0.09);
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
-    margin-top: -9px;
-    position: relative;
-    right: 7px;
-  }
-
-
-  
-}
-
-.location {
-    position: relative;
-    top: 0vh;
-    right: 1rem;
-    align-items: center;
-}
 .label {
     position: relative;
     left: 6rem;
@@ -251,7 +236,6 @@ ngx-charts-bar-horizontal {
 ion-item {
   --background: transparent;
   border-left: 3px solid transparent;
-  margin: 2px 0;
 }
 ion-item.yet-to-unload {
   border-left: 3px solid #f84a4a;
@@ -265,12 +249,6 @@ ion-item.yet-to-unload {
 .ofd-status.amber { color: #ff8000; }
 .danger { color: #f84a4a; }
 .special-asterisk { color: #20c596; margin-left: 2px; }
-.delivery-status {
-  padding: 10px;
-  background: #f5f6f5;
-  border-radius: 5px;
-  margin-bottom: 10px;
-}
 
 ion-card {
   box-shadow: none;
@@ -298,4 +276,96 @@ ion-icon {
 
 .table-left, .table-right {
   width: 48%;
+}
+.trip-status-card {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 2px 12px #e3eee3;
+  padding: 20px;
+  max-width: 940px;
+  margin: 28px auto;
+}
+
+.trip-header-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.trip-lhs, .trip-rhs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  .custom-icon {
+  width: 32px;
+  height: 32px;
+}
+}
+.custom-icon-rhs {
+  width: 32px;
+  height: 32px;
+      height: 32px;
+    left: -49px;
+    display: flex;
+    position: relative;
+}
+.trip-title {
+  font-size: 1.18em;
+  font-weight: 600;
+}
+.trip-count {
+  font-size: 2em;
+  font-weight: 600;
+  margin-left: 8px;
+}
+.txt-green { color: #27b233; }
+.txt-red { color: #e90956; }
+
+.trip-table-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 32px;
+}
+.trip-table {
+  width: 46%;
+}
+.table-header {
+  display: flex;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: #333;
+}
+.table-header span { flex: 1; }
+.table-row {
+  display: flex;
+  align-items: center;
+  font-size: 1.08em;
+  margin-bottom: 6px;
+}
+.table-row span { flex: 1; min-width: 0; text-overflow: ellipsis; overflow: hidden; }
+.expand-indicator {
+  position: absolute;
+  bottom: 8px;
+  right: 12px;
+}
+
+.expand-check {
+  color: #16c96b; 
+  font-size: 24px;
+}
+.delivery-box {
+    background-color: #58595b;
+    color: #fff;
+    border-radius: 7px;
+    font-size: 10px;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    margin-top: -20px;
+}
+
+.delivery-line {
+  white-space: nowrap;
+}
+.day-wise-button{
+  background-color: #16c96b;
 }

@@ -34,4 +34,22 @@
 
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import '@ionic/angular/css/palettes/dark.system.css';
+// 
+/* global.scss */
+
+/* Set default success color for light theme */
+:root {
+  --ion-color-success: #28a745;
+  --ion-color-success-rgb: 40, 167, 69;
+  --ion-color-success-contrast: #ffffff;
+}
+
+/* Set custom success color for dark mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ion-color-success: #2c9d46;  /* Change this to a different success color for dark mode */
+    --ion-color-success-rgb: 44, 157, 70;
+    --ion-color-success-contrast: #ffffff;
+  }
+}
+
